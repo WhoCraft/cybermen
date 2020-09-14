@@ -1,5 +1,8 @@
 package com.wc.cybermen;
 
+import com.wc.cybermen.capability.CapabilityCyber;
+import com.wc.cybermen.network.SyncCyber;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -7,14 +10,18 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-// The value here should match an entry in the META-INF/mods.toml file
-@Mod("wccybermen")
+@Mod(Cybermen.MODID)
 public class Cybermen
 {
     private static final Logger LOGGER = LogManager.getLogger();
+    public static final String MODID = "wccybermen";
+
+    public static SimpleChannel NETWORK_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> "1.0", "1.0"::equals, "1.0"::equals);
 
     public Cybermen() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -23,10 +30,13 @@ public class Cybermen
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        NETWORK_CHANNEL.registerMessage(0, SyncCyber.class, SyncCyber::toBytes, SyncCyber::new, SyncCyber::handle);
     }
 
     private void setup(final FMLCommonSetupEvent event)
     {
+        CapabilityCyber.initCapability();
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
