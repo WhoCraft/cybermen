@@ -1,9 +1,14 @@
 package com.wc.cybermen;
 
+import com.wc.cybermen.block.ControllerBlock;
 import com.wc.cybermen.capability.CapabilityCyber;
 import com.wc.cybermen.network.SyncCyber;
+import net.minecraft.block.Block;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -22,6 +27,8 @@ public class Cybermen
     public static final String MODID = "wccybermen";
 
     public static SimpleChannel NETWORK_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> "1.0", "1.0"::equals, "1.0"::equals);
+    public static Block controllerBlock = new ControllerBlock();
+    public static TileEntityType<ControllerBlock.ControllerTileEntity> controllerTEType = null;
 
     public Cybermen() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -51,5 +58,12 @@ public class Cybermen
     private void processIMC(final InterModProcessEvent event)
     {
 
+    }
+
+    @SubscribeEvent
+    public static void registerTE(RegistryEvent.Register<TileEntityType<?>> evt) {
+        controllerTEType = TileEntityType.Builder.create(ControllerBlock.ControllerTileEntity::new, controllerBlock).build(null);
+        controllerTEType.setRegistryName(MODID, "controller_block");
+        evt.getRegistry().register(controllerTEType);
     }
 }

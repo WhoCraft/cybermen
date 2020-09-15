@@ -1,8 +1,10 @@
 package com.wc.cybermen.capability;
 
 import com.wc.cybermen.Cybermen;
+import com.wc.cybermen.network.SyncCyber;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
@@ -15,6 +17,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -30,12 +33,18 @@ public class CapabilityCyber implements ICyber
 
 	public boolean isCyber;
 
+	public Entity entity;
+
+	public CapabilityCyber(Entity entity){
+		this.entity = entity;
+	}
+
 	public static void initCapability(){
 		CapabilityManager.INSTANCE.register(ICyber.class, new Capability.IStorage<ICyber>()
 		{
 			@Nullable @Override public INBT writeNBT(Capability<ICyber> capability, ICyber instance, Direction side)
 			{
-				if(instance != null)
+				if (instance != null)
 					return instance.serializeNBT();
 				return null;
 			}
@@ -46,13 +55,13 @@ public class CapabilityCyber implements ICyber
 					instance.deserializeNBT((CompoundNBT) nbt);
 
 			}
-		}, CapabilityCyber::new);
+		}, () -> new CapabilityCyber(null));
 	}
 
 	@SubscribeEvent
 	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event){
 		if(event.getObject() instanceof LivingEntity && !event.getObject().getCapability(CYBER_CAPABILITY).isPresent())
-			event.addCapability(new ResourceLocation(Cybermen.MODID, "cyber"), new CyberProvider(new CapabilityCyber()));
+			event.addCapability(new ResourceLocation(Cybermen.MODID, "cyber"), new CyberProvider(new CapabilityCyber(event.getObject())));
 	}
 
 	@Override public CompoundNBT serializeNBT()
@@ -77,10 +86,19 @@ public class CapabilityCyber implements ICyber
 		this.isCyber = isCyber;
 	}
 
+	@Override public void syncToClients(ServerPlayerEntity entity)
+	{
+		if(entity == null){
+			Cybermen.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncCyber(this.entity.getEntityId(), this.serializeNBT()));
+		} else {
+			Cybermen.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new SyncCyber(this.entity.getEntityId(), this.serializeNBT()));
+		}
+	}
+
 	static class CyberProvider implements ICapabilitySerializable<CompoundNBT> {
 
 		public final ICyber container;
-		private LazyOptional<ICyber> optional;
+		private final LazyOptional<ICyber> optional;
 
 		public CyberProvider(ICyber container){
 			this.container = container;
