@@ -4,6 +4,9 @@ import com.wc.cybermen.block.ControllerBlock;
 import com.wc.cybermen.capability.CapabilityCyber;
 import com.wc.cybermen.network.SyncCyber;
 import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,6 +39,8 @@ public class Cybermen
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
+
+        FMLJavaModLoadingContext.get().getModEventBus().register(this);
         MinecraftForge.EVENT_BUS.register(this);
 
         NETWORK_CHANNEL.registerMessage(0, SyncCyber.class, SyncCyber::toBytes, SyncCyber::new, SyncCyber::handle);
@@ -61,9 +66,20 @@ public class Cybermen
     }
 
     @SubscribeEvent
-    public static void registerTE(RegistryEvent.Register<TileEntityType<?>> evt) {
+    public void registerItems(RegistryEvent.Register<Item> evt) {
+        evt.getRegistry().register(new BlockItem(controllerBlock, new Item.Properties().group(ItemGroup.REDSTONE)).setRegistryName(MODID, "controller_block"));
+    }
+
+    @SubscribeEvent
+    public void registerBlock(RegistryEvent.Register<Block> evt) {
+        controllerBlock.setRegistryName(MODID, "controller_block");
+        evt.getRegistry().register(controllerBlock);
+    }
+
+    @SubscribeEvent
+    public void registerTE(RegistryEvent.Register<TileEntityType<?>> evt) {
         controllerTEType = TileEntityType.Builder.create(ControllerBlock.ControllerTileEntity::new, controllerBlock).build(null);
-        controllerTEType.setRegistryName(MODID, "controller_block");
+        controllerTEType.setRegistryName(MODID, "controller_block_te");
         evt.getRegistry().register(controllerTEType);
     }
 }
