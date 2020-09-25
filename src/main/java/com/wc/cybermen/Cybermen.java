@@ -2,6 +2,10 @@ package com.wc.cybermen;
 
 import com.wc.cybermen.block.ControllerBlock;
 import com.wc.cybermen.capability.CapabilityCyber;
+import com.wc.cybermen.data.EnglishLang;
+import com.wc.cybermen.data.ItemModelCreation;
+import com.wc.cybermen.init.CBlocks;
+import com.wc.cybermen.init.CTiles;
 import com.wc.cybermen.network.SyncCyber;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -11,12 +15,10 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.fml.event.lifecycle.*;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -30,8 +32,6 @@ public class Cybermen
     public static final String MODID = "wccybermen";
 
     public static SimpleChannel NETWORK_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> "1.0", "1.0"::equals, "1.0"::equals);
-    public static Block controllerBlock = new ControllerBlock();
-    public static TileEntityType<ControllerBlock.ControllerTileEntity> controllerTEType = null;
 
     public Cybermen() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -65,21 +65,17 @@ public class Cybermen
 
     }
 
-    @SubscribeEvent
-    public void registerItems(RegistryEvent.Register<Item> evt) {
-        evt.getRegistry().register(new BlockItem(controllerBlock, new Item.Properties().group(ItemGroup.REDSTONE)).setRegistryName(MODID, "controller_block"));
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onNewRegistries(RegistryEvent.NewRegistry e) {
+        CTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        CBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        CBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent
-    public void registerBlock(RegistryEvent.Register<Block> evt) {
-        controllerBlock.setRegistryName(MODID, "controller_block");
-        evt.getRegistry().register(controllerBlock);
-    }
-
-    @SubscribeEvent
-    public void registerTE(RegistryEvent.Register<TileEntityType<?>> evt) {
-        controllerTEType = TileEntityType.Builder.create(ControllerBlock.ControllerTileEntity::new, controllerBlock).build(null);
-        controllerTEType.setRegistryName(MODID, "controller_block_te");
-        evt.getRegistry().register(controllerTEType);
+    public void gatherData(GatherDataEvent e) {
+        e.getGenerator().addProvider(new EnglishLang(e.getGenerator()));
+        e.getGenerator().addProvider(new ItemModelCreation(e.getGenerator()));
     }
 }

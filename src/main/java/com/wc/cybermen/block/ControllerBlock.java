@@ -2,6 +2,7 @@ package com.wc.cybermen.block;
 
 import com.wc.cybermen.Cybermen;
 import com.wc.cybermen.client.gui.ControllerTaskGui;
+import com.wc.cybermen.init.CTiles;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -32,7 +33,7 @@ public class ControllerBlock extends Block
 
 		public ControllerTileEntity()
 		{
-			super(Cybermen.controllerTEType);
+			super(CTiles.CONTROLLER_TILE.get());
 		}
 
 		@Override public void read(CompoundNBT compound)
