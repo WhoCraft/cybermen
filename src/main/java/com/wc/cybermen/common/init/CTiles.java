@@ -1,7 +1,7 @@
-package com.wc.cybermen.init;
+package com.wc.cybermen.common.init;
 
 import com.wc.cybermen.Cybermen;
-import com.wc.cybermen.block.ControllerBlock;
+import com.wc.cybermen.common.tiles.ControllerTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -13,9 +13,9 @@ import java.util.function.Supplier;
 
 public class CTiles {
 
-    public static final DeferredRegister<TileEntityType<?>> TILES = new DeferredRegister<>(ForgeRegistries.TILE_ENTITIES, Cybermen.MODID);
+    public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, Cybermen.MODID);
 
-    public static RegistryObject<TileEntityType<?>> CONTROLLER_TILE = TILES.register("controller", () -> registerTiles(ControllerBlock.ControllerTileEntity::new, CBlocks.CONTROLLER_BLOCK.get()));
+    public static RegistryObject<TileEntityType<?>> CONTROLLER_TILE = TILES.register("controller", () -> registerTiles(ControllerTileEntity::new, CBlocks.CONTROLLER_BLOCK.get()));
 
     // Tile Creation
     private static <T extends TileEntity> TileEntityType<T> registerTiles(Supplier<T> tile, Block... validBlock) {

@@ -27,6 +27,11 @@ public class ItemModelCreation implements IDataProvider {
         this.generator = generator;
     }
 
+    public static Path getPath(Path base, Item item) {
+        ResourceLocation key = item.getRegistryName();
+        return base.resolve("assets/" + key.getNamespace() + "/models/item/" + key.getPath() + ".json");
+    }
+
     @Override
     public void act(DirectoryCache cache) throws IOException {
         Path base = generator.getOutputFolder();
@@ -46,11 +51,6 @@ public class ItemModelCreation implements IDataProvider {
 
     }
 
-    public static Path getPath(Path base, Item item) {
-        ResourceLocation key = item.getRegistryName();
-        return base.resolve("assets/" + key.getNamespace() + "/models/item/" + key.getPath() + ".json");
-    }
-
     public void generateSpriteItem(Path path, DirectoryCache cache, String... textures) throws IOException {
         JsonObject doc = new JsonObject();
         doc.add("parent", new JsonPrimitive("item/generated"));
@@ -61,7 +61,6 @@ public class ItemModelCreation implements IDataProvider {
             tex.add("layer" + index, new JsonPrimitive("whocosmetics:item/" + s));
         }
         doc.add("textures", tex);
-
 
 
         IDataProvider.save(GSON, cache, doc, path);

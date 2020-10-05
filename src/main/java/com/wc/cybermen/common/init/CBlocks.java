@@ -1,7 +1,7 @@
-package com.wc.cybermen.init;
+package com.wc.cybermen.common.init;
 
 import com.wc.cybermen.Cybermen;
-import com.wc.cybermen.block.ControllerBlock;
+import com.wc.cybermen.common.block.ControllerBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -15,11 +15,10 @@ import net.minecraftforge.registries.ForgeRegistries;
 @Mod.EventBusSubscriber(modid = Cybermen.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class CBlocks {
 
-    public static final DeferredRegister<Block> BLOCKS = new DeferredRegister<>(ForgeRegistries.BLOCKS, Cybermen.MODID);
-    public static final DeferredRegister<Item> BLOCK_ITEMS = new DeferredRegister<>(ForgeRegistries.ITEMS, Cybermen.MODID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, Cybermen.MODID);
+    public static final DeferredRegister<Item> BLOCK_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Cybermen.MODID);
 
     public static final RegistryObject<Block> CONTROLLER_BLOCK = BLOCKS.register("controller", ControllerBlock::new);
-
 
 
     private static void genBlockItems(Block... blocks) {

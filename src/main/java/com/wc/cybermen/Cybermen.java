@@ -1,17 +1,11 @@
 package com.wc.cybermen;
 
-import com.wc.cybermen.block.ControllerBlock;
-import com.wc.cybermen.capability.CapabilityCyber;
+import com.wc.cybermen.common.capability.CapabilityCyber;
+import com.wc.cybermen.common.init.CBlocks;
+import com.wc.cybermen.common.init.CTiles;
 import com.wc.cybermen.data.EnglishLang;
 import com.wc.cybermen.data.ItemModelCreation;
-import com.wc.cybermen.init.CBlocks;
-import com.wc.cybermen.init.CTiles;
 import com.wc.cybermen.network.SyncCyber;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -26,11 +20,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 @Mod(Cybermen.MODID)
-public class Cybermen
-{
-    private static final Logger LOGGER = LogManager.getLogger();
+public class Cybermen {
     public static final String MODID = "wccybermen";
-
+    private static final Logger LOGGER = LogManager.getLogger();
     public static SimpleChannel NETWORK_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> "1.0", "1.0"::equals, "1.0"::equals);
 
     public Cybermen() {
@@ -46,8 +38,7 @@ public class Cybermen
         NETWORK_CHANNEL.registerMessage(0, SyncCyber.class, SyncCyber::toBytes, SyncCyber::new, SyncCyber::handle);
     }
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
+    private void setup(final FMLCommonSetupEvent event) {
         CapabilityCyber.initCapability();
     }
 
@@ -55,13 +46,11 @@ public class Cybermen
 
     }
 
-    private void enqueueIMC(final InterModEnqueueEvent event)
-    {
+    private void enqueueIMC(final InterModEnqueueEvent event) {
 
     }
 
-    private void processIMC(final InterModProcessEvent event)
-    {
+    private void processIMC(final InterModProcessEvent event) {
 
     }
 

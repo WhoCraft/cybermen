@@ -1,7 +1,7 @@
 package com.wc.cybermen.data;
 
 import com.wc.cybermen.Cybermen;
-import com.wc.cybermen.init.CBlocks;
+import com.wc.cybermen.common.init.CBlocks;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 
