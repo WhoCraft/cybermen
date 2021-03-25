@@ -23,9 +23,8 @@ import javax.annotation.Nullable;
  */
 public class ControllerBlock extends Block {
     public ControllerBlock() {
-        super(Block.Properties.create(Material.IRON, MaterialColor.IRON));
+        super(Block.Properties.of(Material.HEAVY_METAL, MaterialColor.METAL));
     }
-
 
     @Override
     public boolean hasTileEntity(BlockState state) {
@@ -39,10 +38,10 @@ public class ControllerBlock extends Block {
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (player.world.isRemote) {
-            Minecraft.getInstance().displayGuiScreen(new ControllerTaskGui());
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (player.level.isClientSide) {
+            Minecraft.getInstance().setScreen(new ControllerTaskGui());
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 }

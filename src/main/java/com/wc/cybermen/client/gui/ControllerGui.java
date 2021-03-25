@@ -21,17 +21,17 @@ public abstract class ControllerGui extends Screen {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        matrixStack.push();
-        minecraft.getTextureManager().bindTexture(BACKGROUND);
+        matrixStack.pushPose();
+        minecraft.getTextureManager().bind(BACKGROUND);
         blit(matrixStack, 10, 10, 0, 0, width - 20, height - 20, width - 20, height - 20);
-        matrixStack.pop();
+        matrixStack.popPose();
 
         renderContent(matrixStack, mouseX, mouseY, partialTicks);
 
-        matrixStack.push();
-        minecraft.getTextureManager().bindTexture(FOREGROUND);
+        matrixStack.pushPose();
+        minecraft.getTextureManager().bind(FOREGROUND);
         blit(matrixStack, 10, 10, 0, 0, width - 10, height - 10, width - 20, height - 20);
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
 

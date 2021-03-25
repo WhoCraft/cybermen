@@ -33,7 +33,7 @@ public class ItemModelCreation implements IDataProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) throws IOException {
+    public void run(DirectoryCache cache) throws IOException {
         Path base = generator.getOutputFolder();
         Predicate<Item> itemPredicate = item -> item.getRegistryName().getNamespace().equals(Cybermen.MODID);
 

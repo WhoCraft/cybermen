@@ -88,9 +88,9 @@ public class CapabilityCyber implements ICyber {
     @Override
     public void syncToClients(ServerPlayerEntity entity) {
         if (entity == null) {
-            Cybermen.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncCyber(this.entity.getEntityId(), this.serializeNBT()));
+            Cybermen.NETWORK_CHANNEL.send(PacketDistributor.ALL.noArg(), new SyncCyber(this.entity.getId(), this.serializeNBT()));
         } else {
-            Cybermen.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new SyncCyber(this.entity.getEntityId(), this.serializeNBT()));
+            Cybermen.NETWORK_CHANNEL.send(PacketDistributor.PLAYER.with(() -> entity), new SyncCyber(this.entity.getId(), this.serializeNBT()));
         }
     }
 

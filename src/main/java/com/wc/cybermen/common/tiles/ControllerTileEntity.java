@@ -14,14 +14,4 @@ public class ControllerTileEntity extends TileEntity {
     public ControllerTileEntity() {
         super(CTiles.CONTROLLER_TILE.get());
     }
-
-    @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        return super.write(compound);
-    }
 }
