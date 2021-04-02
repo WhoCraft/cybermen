@@ -2,14 +2,18 @@ package com.wc.cybermen;
 
 import com.wc.cybermen.common.capability.CapabilityCyber;
 import com.wc.cybermen.common.init.CBlocks;
+import com.wc.cybermen.common.init.CEntities;
+import com.wc.cybermen.common.init.CItems;
 import com.wc.cybermen.common.init.CTiles;
 import com.wc.cybermen.data.EnglishLang;
 import com.wc.cybermen.data.ItemModelCreation;
 import com.wc.cybermen.network.SyncCyber;
+import com.wc.cybermen.util.ClientUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.*;
@@ -26,13 +30,14 @@ public class Cybermen {
     public static SimpleChannel NETWORK_CHANNEL = NetworkRegistry.newSimpleChannel(new ResourceLocation(MODID, MODID), () -> "1.0", "1.0"::equals, "1.0"::equals);
 
     public Cybermen() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(this::setup);
+        modEventBus.addListener(this::enqueueIMC);
+        modEventBus.addListener(this::processIMC);
+        modEventBus.addListener(this::doClientStuff);
 
 
-        FMLJavaModLoadingContext.get().getModEventBus().register(this);
+        modEventBus.register(this);
         MinecraftForge.EVENT_BUS.register(this);
 
         NETWORK_CHANNEL.registerMessage(0, SyncCyber.class, SyncCyber::toBytes, SyncCyber::new, SyncCyber::handle);
@@ -43,7 +48,7 @@ public class Cybermen {
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-
+        ClientUtil.init();
     }
 
     private void enqueueIMC(final InterModEnqueueEvent event) {
@@ -60,6 +65,8 @@ public class Cybermen {
         CTiles.TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
         CBlocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
         CBlocks.BLOCK_ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        CEntities.ENTITIES.register(FMLJavaModLoadingContext.get().getModEventBus());
+        CItems.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     @SubscribeEvent

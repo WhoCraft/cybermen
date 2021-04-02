@@ -1,0 +1,15 @@
+{
+  "overrides": [{
+    "predicate": {
+      "wccybermen:aim": 0
+    },
+    "model": "wccybermen:item/weapon/earthshock"
+  },
+    {
+      "predicate": {
+        "wccybermen:aim": 1
+      },
+      "model": "wccybermen:item/weapon/earthshock_aimed"
+    }
+  ]
+}

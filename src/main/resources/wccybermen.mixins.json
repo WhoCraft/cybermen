@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.wc.cybermen.mixin",
+  "refmap": "wccybermen.refmap.json",
+  "client": [
+    "MixinBiped"
+  ],
+  "minVersion": "0.8",
+  "mixins": [
+  ]
+}
